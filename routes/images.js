@@ -14,10 +14,11 @@ router.get('/', (req, res) => {
 	db.listImages().then(data => res.send(data));
 });
 
-router.get('/:name', (req, res) => {
+router.get('/img/:name', (req, res) => {
     db.getImage(req.params.name)
 	.then(data => {
 			const buffer = data[0].image;
+			
 			return buffer.slice(0, buffer.length);
 		})
 	/*.then(data=>{
@@ -25,7 +26,7 @@ router.get('/:name', (req, res) => {
 		return data[0];
 	})*/
 	.then(data => res.send(data))
-	.catch(err => console.log(err));
+	.catch(err => console.log("Getting Image error", err));
 });
 
 router.get('/min/:name', (req, res) => {
@@ -81,6 +82,11 @@ router.post('/meta', (req, res) =>{
 			res.send("error");
 		});
 })
+
+router.get('/meta', (req, res) => {
+	db.getImageDesc(req.query.image)
+		.then(result => res.send({header: result[0].header, desc: result[0].desc}));
+});
 
 router.post('/delete', (req, res) => {
 	db.isTocken(req.body.token)

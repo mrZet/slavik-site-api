@@ -63,8 +63,21 @@ export async function deleteImage(name) {
     return await Image.deleteOne({title: name});
 }
 
-export async function updateImageDesc(name, header, desc){
-    return Image.update({title: name}, { $set: { header: header, desc: desc }});
+export async function updateImageDesc(name, header, desc) {
+    return Image.update({
+        title: name
+    }, {
+        $set: {
+            header: header,
+            desc: desc
+        }
+    });
+}
+
+export function getImageDesc(img) {
+    return Image
+        .find({title: img})
+        .select({_id: 0, header: 1, desc: 1});
 }
 
 export function addTocken(token, cb) {
@@ -74,9 +87,9 @@ export function addTocken(token, cb) {
 
 export async function isTocken(token) {
     const tok = await Token.find({token: token});
-    if (tok == false)
+    if (tok == false) 
         return false;
-        
+    
     return true;
 }
 
@@ -87,4 +100,3 @@ export async function deleteToken(token, res) {
     else 
         res.send({error: false});
     }
-
